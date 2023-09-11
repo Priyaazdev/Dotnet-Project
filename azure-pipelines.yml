@@ -1,0 +1,54 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+- devlop
+pool:
+  vmImage: ubuntu-latest
+
+resources:
+ containers:
+   - container: Dotnetcore
+     image: 
+
+variables:
+  buildConfiguration: 'Release'
+  project_sln: '**/*.csproj'
+
+stages:
+  - stage: 'Build'
+    jobs:
+      - job: 
+        container: Dotnetcore
+        displayName: 'Build Job'
+        steps:
+        - task: DotNetCoreCLI@2
+          displayName: 'Restore'
+          inputs:
+            command: 'restore'
+            projects: 'project_sln'
+            restoreArguments: '--configuration $(buildConfiguration)'
+        - task: DotNetCoreCLI@2
+          displayName: 'Build'
+          inputs:
+            command: 'build'
+            projects: 'project_sln'
+            arguments: '--configuration $(buildConfiguration)'
+        - task: DotNetCoreCLI@2
+          displayName: 'Test'
+          inputs:
+            command: 'test'
+            projects: 'project_sln'
+        - task: CmdLine@2
+          inputs:
+            script: 'dotnet tool install -g opencover'
+
+
+
+
+  
+
+
