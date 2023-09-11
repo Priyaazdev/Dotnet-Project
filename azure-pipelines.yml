@@ -38,13 +38,23 @@ stages:
             projects: 'project_sln'
             arguments: '--configuration $(buildConfiguration)'
         - task: DotNetCoreCLI@2
+          displayName: 'publish'
+          inputs:
+            command: 'publish'
+            publishWebProjects: true
+            arguments: 'output $(build.ArtifactStagingDirectory)'
+        - task: DotNetCoreCLI@2
           displayName: 'Test'
           inputs:
             command: 'test'
             projects: 'project_sln'
         - task: CmdLine@2
+          displayName: 'Install coverlet'
           inputs:
-            script: 'dotnet tool install -g opencover'
+            script: |
+              dotnet tool install -g opencover 
+              coverlet --help
+              dotnet test $(project_sln) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
 
 
